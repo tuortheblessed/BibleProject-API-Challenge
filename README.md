@@ -11,6 +11,27 @@ This project implements automated tests to verify the following user journey:
 3. Create a user account
 4. Verify the donation appears in the user's donation history
 
+## Further Test Strategy
+### Include a brief summary (a few bullet points is fine) of how you’d automate these tests or if you would automate them at all.
+#### a. For example, if you had access to Stripe and Salesforce would you write a test that runs through this whole workflow?
+
+It depends on the type of testing we are targeting. If we are looking to have a suite of tests where we hit each endpoint, I would not be including this kind of test flow.
+We would have cases where each endpoint is hit and ensuring the contracts for each endpoint remains the same, that proper errors are returned, that edge cases are handled, etc.
+
+If we were doing more of an integration test where we are making sure the flow of calls between multiple systems work as expected, that suite would be less thorough on each endpoint's specific details, but making sure that contracts are being honered and act in the expected ways.
+For example, unless I was specifically testing the Stripe integration, I would not usually be making those calls out to a third party, instead they would get mocked and we may need to make some development changes to accomodate that kind of thing in lower environments.
+
+### Next Steps
+
+Areas for potential enhancement:
+- Add after hook to clean up created test data
+- Extract common operations to utility functions
+- Add schema validations for endpoints
+- Add support for multiple environments
+- Add error case scenarios
+- Add CICD
+- Add more comprehensive test cases
+
 ## Technical Implementation
 
 The solution uses:
@@ -85,15 +106,3 @@ The solution implements the following GraphQL operations:
 - `register`: Creates user account
 - `login`: Authenticates user
 - `me`: Retrieves user profile with donation history
-
-## Next Steps
-
-Areas for potential enhancement:
-- Add after hook to clean up created test data
-- Move functions such as register and login to reusable locations for new tests
-- Add schema validations for endpoints
-- Add support for multiple environments
-- Add error case scenarios
-- Extract common operations to utility functions
-- Add more comprehensive test cases
-- Add CICD
