@@ -4,20 +4,23 @@ import {
   REGISTER_MUTATION,
   LOGIN_MUTATION,
   ME_DONATION_HISTORY_QUERY,
+  ACCOUNT_DELETION_MUTATION,
 } from '../../utils/graphqlQueries'
 import { faker } from '@faker-js/faker'
 import Stripe from 'stripe'
 const stripe = new Stripe(process.env.STRIPE_API_KEY)
 
 test.describe('validate donation history', async () => {
+  const givenName = faker.person.firstName()
+  const surname = faker.person.lastName()
+  const email = faker.internet.email()
+  const password = faker.internet.password()
+
+  let authToken: string
+
   test('one time payment with minimum required variables and ', async ({
     request,
   }) => {
-    const givenName = faker.person.firstName()
-    const surname = faker.person.lastName()
-    const email = faker.internet.email()
-    const password = faker.internet.password()
-
     const startOneTimePaymentResponse = await request.post('', {
       data: {
         query: START_ONE_TIME_PAYMENT_MUTATION,
@@ -46,7 +49,6 @@ test.describe('validate donation history', async () => {
     const clientSecret =
       startOneTimePaymentJson.data.startOneTimePayment.clientSecret
     const paymentIntentId = clientSecret.slice(0, 27)
-
     const paymentIntentResponse = await stripe.paymentIntents.confirm(
       paymentIntentId,
       {
@@ -97,8 +99,7 @@ test.describe('validate donation history', async () => {
     expect(loginResponse.status(), 'User should be logged in').toBe(200)
 
     const loginJSON = await loginResponse.json()
-    const authToken = loginJSON.data.login.authorization.token
-
+    authToken = loginJSON.data.login.authorization.token
     const donationHistoryResponse = await request.post('', {
       headers: {
         Authorization: `Bearer ${authToken}`,
@@ -118,5 +119,17 @@ test.describe('validate donation history', async () => {
       donationHistoryJSON.errors,
       'User Donation History returns no errors',
     ).toBeFalsy()
+  })
+
+  test.afterEach('Status check', async ({ request }) => {
+    const accountDeletionResponse = await request.post('', {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+      data: {
+        query: ACCOUNT_DELETION_MUTATION,
+        variables: {},
+      },
+    })
   })
 })

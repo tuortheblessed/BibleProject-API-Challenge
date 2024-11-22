@@ -10,6 +10,7 @@ This project implements automated tests to verify the following user journey:
 2. Process payment via Stripe
 3. Create a user account
 4. Verify the donation appears in the user's donation history
+5. After hook which deletes the account created during the test
 
 ## Further Test Strategy
 ### Include a brief summary (a few bullet points is fine) of how you’d automate these tests or if you would automate them at all.
@@ -24,7 +25,6 @@ For example, unless I was specifically testing the Stripe integration, I would n
 ### Next Steps
 
 Areas for potential enhancement:
-- Add after hook to clean up created test data
 - Extract common operations to utility functions
 - Add schema validations for endpoints
 - Add support for multiple environments
@@ -61,6 +61,9 @@ The main test case (`oneTimePayment.spec.ts`) demonstrates:
    - Logs in with created credentials
    - Retrieves donation history
    - Verifies donation record
+
+5. After hook:
+  - Requests to delete the account created during the test
 
 ## Setup
 
@@ -106,3 +109,4 @@ The solution implements the following GraphQL operations:
 - `register`: Creates user account
 - `login`: Authenticates user
 - `me`: Retrieves user profile with donation history
+- `requestAccountDeletion`: Deletes the account created during the test

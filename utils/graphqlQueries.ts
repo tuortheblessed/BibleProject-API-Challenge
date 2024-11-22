@@ -3,7 +3,7 @@ export const START_ONE_TIME_PAYMENT_MUTATION = `
     startOneTimePayment(input: $input) {
       clientSecret
     }
-  }`;
+  }`
 
 export const REGISTER_MUTATION = `
   mutation Register($input: RegisterInput!) {
@@ -12,7 +12,7 @@ export const REGISTER_MUTATION = `
         token
       }
     }
-  }`;
+  }`
 
 export const LOGIN_MUTATION = `
   mutation Login($input: LoginInput!) {
@@ -21,7 +21,7 @@ export const LOGIN_MUTATION = `
         token
       }
     }
-  }`;
+  }`
 
 export const ME_DONATION_HISTORY_QUERY = `
   query Me {
@@ -58,4 +58,11 @@ export const ME_DONATION_HISTORY_QUERY = `
         currency
       }
     }
-  }`;
+  }`
+
+export const ACCOUNT_DELETION_MUTATION = `
+  mutation RequestAccountDeletion {
+    requestAccountDeletion {
+      email
+    }
+  }`
