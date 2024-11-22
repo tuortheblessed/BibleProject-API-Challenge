@@ -37,8 +37,12 @@ test.describe('validate donation history', async () => {
       startOneTimePaymentResponse.status(),
       'Payment should be started',
     ).toBe(200)
-
     const startOneTimePaymentJson = await startOneTimePaymentResponse.json()
+    expect(
+      startOneTimePaymentJson.errors,
+      'User One Time Payment returns no errors',
+    ).toBeFalsy()
+
     const clientSecret =
       startOneTimePaymentJson.data.startOneTimePayment.clientSecret
     const paymentIntentId = clientSecret.slice(0, 27)
@@ -46,6 +50,7 @@ test.describe('validate donation history', async () => {
     const paymentIntentResponse = await stripe.paymentIntents.confirm(
       paymentIntentId,
       {
+        use_stripe_sdk: true,
         payment_method: 'pm_card_visa',
         return_url: faker.internet.url(),
       },
@@ -56,7 +61,6 @@ test.describe('validate donation history', async () => {
       "Stripe Payment Intent should be 'succeeded'",
     ).toBe('succeeded')
 
-    // TODO: move register and login requests into utils folder for easy re-use in other tests
     const registerResponse = await request.post('', {
       data: {
         query: REGISTER_MUTATION,
@@ -109,8 +113,10 @@ test.describe('validate donation history', async () => {
       donationHistoryResponse.status(),
       'Donation history should be returned',
     ).toBe(200)
-
     const donationHistoryJSON = await donationHistoryResponse.json()
-    // TODO: assert on donation history once I figure out why it is not currently populating
+    expect(
+      donationHistoryJSON.errors,
+      'User Donation History returns no errors',
+    ).toBeFalsy()
   })
 })

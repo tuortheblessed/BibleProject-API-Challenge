@@ -24,6 +24,10 @@ export default defineConfig({
     baseURL: process.env.MONO_STAGE,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure',
+    extraHTTPHeaders: {
+      Accept: 'application/graphql-response+json',
+      'Content-type': 'application/json',
+    },
   },
 
   /* Configure projects to organize tests */
